@@ -1,5 +1,5 @@
 (function (angular) {
-	
+
 	var momentPickerProvider = (function () {
 		function momentPickerProvider() {
 			defaults = {
@@ -26,10 +26,10 @@
 		momentPickerProvider.prototype.$get = function () {
 			return defaults;
 		};
-		
+
 		return momentPickerProvider;
 	})();
-	
+
 	var MomentPickerDirective = (function () {
 		function MomentPickerDirective(timeout, sce, compile, document, momentPickerProvider) {
 			this.restrict = 'A',
@@ -110,13 +110,13 @@
 					'</div>' +
 				'</div>'
 			);
-			
+
 			// one-way binding attributes
 			angular.forEach(['locale', 'format', 'minView', 'maxView', 'startView', 'leftArrow', 'rightArrow'], function (attr) {
 				if (!angular.isDefined($scope[attr])) $scope[attr] = momentPicker[attr]
 				if (!angular.isDefined($attrs[attr])) $attrs[attr] = $scope[attr];
 			});
-			
+
 			// utilities
 			$scope.momentToDate = function (value) { return angular.isDefined(value) && value.isValid() ? value.clone().toDate() : undefined; }
 			$scope.valueUpdate = function () { if (!$scope.disabled) $scope.value = $scope.momentToDate($scope.valueMoment); }
@@ -142,7 +142,7 @@
 					$scope.view.update();
 				}
 			};
-			
+
 			$scope.views = {
 				all: ['year', 'month', 'day', 'hour', 'minute'],
 				// for each view, `$scope.views.formats` object contains the available moment formats
@@ -167,12 +167,12 @@
 						if (!angular.isDefined(minView)) minView = view;
 						maxView = view;
 					});
-					
+
 					if (!angular.isDefined(minView)) minView = 0;
 					else minView = Math.max(0, $scope.views.all.indexOf(minView));
 					if (!angular.isDefined(maxView)) maxView = $scope.views.all.length - 1;
 					else maxView = Math.min($scope.views.all.length - 1, $scope.views.all.indexOf(maxView));
-					
+
 					if (minView > $scope.views.all.indexOf($scope.minView)) $scope.minView = $scope.views.all[minView];
 					if (maxView < $scope.views.all.indexOf($scope.maxView)) $scope.maxView = $scope.views.all[maxView];
 				}
@@ -212,7 +212,7 @@
 				render: function () {
 					var momentPrevious = $scope.view.moment.clone().startOf($scope.view.selected).subtract(1, $scope.view.selected),
 						momentNext     = $scope.view.moment.clone().endOf($scope.view.selected).add(1, $scope.view.selected);
-					
+
 					$scope.view.previous.selectable = $scope.limits.isAfterOrEqualMin(momentPrevious, $scope.view.selected);
 					$scope.view.previous.label      = $sce.trustAsHtml($scope.view.previous.selectable ? $scope.leftArrow : '&nbsp;');
 					$scope.view.next.selectable     = $scope.limits.isBeforeOrEqualMax(momentNext, $scope.view.selected);
@@ -223,7 +223,7 @@
 					var nextView = $scope.views.all.indexOf(view),
 						minView  = $scope.views.all.indexOf($scope.minView),
 						maxView  = $scope.views.all.indexOf($scope.maxView);
-					
+
 					if (nextView < 0 || nextView > maxView) {
 						$scope.valueUpdate($scope.valueMoment = $scope.view.moment.clone());
 						$scope.view.close();
@@ -236,12 +236,12 @@
 				render: function () {
 					var month  = $scope.view.moment.clone().startOf('year'),
 						months = moment.monthsShort();
-					
+
 					$scope.yearView.fourMonths = [];
 					months.forEach(function (label, i) {
 						var index = Math.floor(i / 4),
 							selectable = $scope.limits.isSelectable(month, 'month');
-						
+
 						if (!$scope.yearView.fourMonths[index]) $scope.yearView.fourMonths[index] = [];
 						$scope.yearView.fourMonths[index].push({
 							label: month.format(momentPicker.monthsFormat),
@@ -279,7 +279,7 @@
 						lastDay   = $scope.view.moment.clone().endOf('month').endOf('week'),
 						firstWeek = day.week(),
 						lastWeek  = firstWeek + 5;//lastDay.week() == 1 ? lastDay.weekday(-1).week() + 1 : lastDay.week();
-					
+
 					weeks = {};
 					$scope.monthView.weeks = [];
 					for (var w = firstWeek; w <= lastWeek; w++)
@@ -315,12 +315,12 @@
 				render: function () {
 					var hour = $scope.view.moment.clone().startOf('day'),
 						format = moment.localeData().longDateFormat('LT').replace(/[aA]/, '');
-					
+
 					$scope.dayView.threeHours = [];
 					for (var h = 0; h < 24; h++) {
 						var index = Math.floor(h / 4),
 							selectable = $scope.limits.isSelectable(hour, 'hour');
-						
+
 						if (!$scope.dayView.threeHours[index])
 							$scope.dayView.threeHours[index] = [];
 						$scope.dayView.threeHours[index].push({
@@ -349,12 +349,12 @@
 				render: function () {
 					var i = 0,
 						minute = $scope.view.moment.clone().startOf('hour');
-					
+
 					$scope.hourView.minutes = [];
 					for (var m = 0; m < 60; m += momentPicker.minutesStep) {
 						var index = Math.floor(i / 4),
 							selectable = $scope.limits.isSelectable(minute, 'minute');
-						
+
 						if (!$scope.hourView.minutes[index])
 							$scope.hourView.minutes[index] = [];
 						$scope.hourView.minutes[index].push({
@@ -385,12 +385,12 @@
 				render: function () {
 					var i = 0,
 						second = $scope.view.moment.clone().startOf('minute');
-					
+
 					$scope.minuteView.seconds = [];
 					for (var s = 0; s < 60; s += momentPicker.secondsStep) {
 						var index = Math.floor(i / 6),
 							selectable = $scope.limits.isSelectable(second, 'second');
-						
+
 						if (!$scope.minuteView.seconds[index])
 							$scope.minuteView.seconds[index] = [];
 						$scope.minuteView.seconds[index].push({
@@ -416,7 +416,7 @@
 					$scope.view.change('second');
 				}
 			};
-			
+
 			// creation
 			$scope.picker = angular.element('<span class="moment-picker"></span>');
 			$element.after($scope.picker);
@@ -424,14 +424,14 @@
 			$scope.container = $compile($scope.template)($scope);
 			$scope.picker.append($scope.contents);
 			$scope.picker.append($scope.container);
-			
+
 			// initialization
 			$scope.views.detectMinMax();
 			$scope.limits.checkView();
-			
+
 			// properties listeners
 			$scope.$watch('model', function (model, previous) {
-				if (angular.isDefined(model)) {
+				if (angular.isDefined(model) && angular.isUndefined(model._isAMomentObject)) {
 					$scope.valueMoment = moment(model, $scope.format, $scope.locale);
 					if (!$scope.valueMoment.isValid())
 						$scope.valueMoment = undefined;
@@ -440,17 +440,19 @@
 						$scope.view.update();
 					}
 				}
-				$scope.valueUpdate($scope.valueMoment);
+				//$scope.valueUpdate($scope.valueMoment);
 				$scope.limits.checkValue();
 			});
 			$scope.$watch('value', function (value, previous) {
 				if (!angular.isDefined($scope.valueMoment)) return;
+
 				var oldValue = $scope.model,
-					newValue = $scope.valueMoment.format($scope.format);
+					  newValue = $scope.valueMoment.format($scope.format);
+
 				if (newValue != oldValue)
 					$timeout(function () {
 						$scope.view.update($scope.view.moment = $scope.valueMoment.clone());
-						$scope.model = newValue;
+						$scope.model = $scope.valueMoment.clone();
 						if (angular.isFunction($scope.change)) $scope.change({ newValue: newValue, oldValue: oldValue });
 					});
 			});
@@ -482,7 +484,7 @@
 				$scope.limits.checkView();
 				$scope.view.render();
 			}, true);
-			
+
 			// open/close listeners
 			$document.on('click', function () { if ($scope.view.isOpen) $timeout($scope.view.close); });
 			$scope.container.on('click', function (e) { e.stopPropagation(); });
@@ -492,10 +494,10 @@
 			});
 			angular.element($scope.contents[0].querySelector('input')).on('focus', function () { if (!$scope.view.isOpen) $timeout($scope.view.open); });
 		};
-		
+
 		return MomentPickerDirective;
 	})();
-	
+
 	angular
 		.module('moment-picker', [])
 		.provider('momentPicker', [function () {
@@ -504,5 +506,5 @@
 		.directive('momentPicker', ['$timeout', '$sce', '$compile', '$document', 'momentPicker', function ($timeout, $sce, $compile, $document, momentPicker) {
 			return new MomentPickerDirective($timeout, $sce, $compile, $document, momentPicker);
 		}]);
-	
+
 })(window.angular);
