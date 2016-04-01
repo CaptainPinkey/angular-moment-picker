@@ -431,8 +431,11 @@
 
 			// properties listeners
 			$scope.$watch('model', function (model, previous) {
-				if (angular.isDefined(model) && angular.isUndefined(model._isAMomentObject)) {
-					$scope.valueMoment = moment(model, $scope.format, $scope.locale);
+				if (angular.isDefined(model)) {
+          				if(angular.isUndefined(model._isAMomentObject))
+				     		$scope.valueMoment = moment(model, $scope.format, $scope.locale);
+				        else
+				            	$scope.valueMoment = model;
 					if (!$scope.valueMoment.isValid())
 						$scope.valueMoment = undefined;
 					else {
